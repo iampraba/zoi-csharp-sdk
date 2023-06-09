@@ -107,9 +107,9 @@ namespace Com.Zoho.Util
 
         public static readonly string MODULEDETAILS = "moduleDetails";
 
-        public static readonly string DATATYPECONVERTER = "Com.Zoho.Util.DataTypeConverter`1[[$type]], ZOHOSDK";
+        public static readonly string DATATYPECONVERTER = "Com.Zoho.Util.DataTypeConverter`1[[$type]], OfficeIntegratorSDK";
 
-        public static readonly string CHOICE = "Com.Zoho.Util.Choice`1[[$type]], ZOHOSDK";
+        public static readonly string CHOICE = "Com.Zoho.Util.Choice`1[[$type]], OfficeIntegratorSDK";
 
         public static readonly string CHOICE_NAME = "Choice";
 
@@ -237,8 +237,8 @@ namespace Com.Zoho.Util
         public static readonly string READ_ONLY = "read-only";
 
         public static readonly string WRITE_ONLY = "write-only";
-	
-	    public static readonly string UPDATE_ONLY = "update-only";
+
+        public static readonly string UPDATE_ONLY = "update-only";
 
         public static readonly string IS_KEY_MODIFIED = "IsKeyModified";
 
@@ -388,7 +388,7 @@ namespace Com.Zoho.Util
 
         public static readonly string PRE_CONVERT = "PreConvert";
 
-        public static readonly string JSON_DETAILS_FILE_PATH = "Resources.JSONDetails.json";
+        public static readonly string JSON_DETAILS_FILE_PATH = ".Resources.JSONDetails.json";
 
         public static readonly string EMAIL_REGEX = @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z";
 

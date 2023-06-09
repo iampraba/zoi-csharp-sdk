@@ -6,7 +6,7 @@
     <Authors>Zoho Office Integrator Team</Authors>
     <NeutralLanguage>en-US</NeutralLanguage>
 	<PackageId>zoi-csharp-sdk</PackageId>
-	<PackageVersion>1.0.0</PackageVersion>
+	<PackageVersion>1.0.1</PackageVersion>
     <Owners>Zoho Office Integrator Team</Owners>
     <PackageProjectUrl>https://www.zoho.com/officeintegrator</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iampraba/zoi-csharp-sdk</RepositoryUrl>
@@ -31,7 +31,7 @@
         <None Include="README.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="MySql.Data" Version="8.0.33" />
   </ItemGroup>
   <ItemGroup>

@@ -37,7 +37,7 @@ namespace Com.Zoho
 
             public Builder()
             {
-                if(Initializer.initializer != null)
+                if (Initializer.initializer != null)
                 {
                     user = Initializer.initializer.User;
 
@@ -96,10 +96,10 @@ namespace Com.Zoho
 
             public Builder SDKConfig(SDKConfig sdkConfig)
             {
-			    this.sdkConfig = sdkConfig;
+                this.sdkConfig = sdkConfig;
 
-			    return this;
-		    }
+                return this;
+            }
 
             public Builder RequestProxy(RequestProxy requestProxy)
             {
@@ -112,29 +112,29 @@ namespace Com.Zoho
             {
                 Utility.AssertNotNull(user, errorMessage, Constants.USERSIGNATURE_ERROR_MESSAGE);
 
-			    this.user = user;
+                this.user = user;
 
-			    return this;
-		    }
+                return this;
+            }
 
             public Builder Store(TokenStore store)
             {
-			    this.store = store;
+                this.store = store;
 
-			    return this;
-		    }
+                return this;
+            }
 
             public Builder Environment(Dc.DataCenter.Environment environment)
             {
                 Utility.AssertNotNull(environment, errorMessage, Constants.ENVIRONMENT_ERROR_MESSAGE);
 
-			    this.environment = environment;
+                this.environment = environment;
 
-			    return this;
+                return this;
             }
         }
 
-        private static  ThreadLocal<Initializer> LOCAL = new ThreadLocal<Initializer>();
+        private static ThreadLocal<Initializer> LOCAL = new ThreadLocal<Initializer>();
 
         private static Initializer initializer;
 
@@ -172,8 +172,8 @@ namespace Com.Zoho
                 try
                 {
                     string result = "";
-
-                    using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(Constants.JSON_DETAILS_FILE_PATH))
+                    Assembly assembly = Assembly.GetExecutingAssembly();
+                    using (Stream stream = assembly.GetManifestResourceStream(assembly.GetName().Name + Constants.JSON_DETAILS_FILE_PATH))
                     {
                         using (StreamReader reader = new StreamReader(stream))
                         {
@@ -204,7 +204,7 @@ namespace Com.Zoho
 
                 SDKLogger.LogInfo(Constants.INITIALIZATION_SUCCESSFUL + initializer.ToString());
             }
-            catch(SDKException e)
+            catch (SDKException e)
             {
                 throw e;
             }
@@ -320,7 +320,7 @@ namespace Com.Zoho
                 return token;
             }
         }
-        
+
         /// <summary>
         /// This is a getter method to get Proxy information.
         /// </summary>
@@ -332,7 +332,7 @@ namespace Com.Zoho
                 return requestProxy;
             }
         }
-        
+
         /// <summary>
         /// This is a getter method to get the SDK Configuration
         /// </summary>
