@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Provides C# SDK support for APIs.</Description>
+    <Authors>Zoho Office Integrator Team</Authors>
+    <NeutralLanguage>en-US</NeutralLanguage>
+	<PackageId>zoi-csharp-sdk</PackageId>
+	<PackageVersion>1.0.0</PackageVersion>
+    <Owners>Zoho Office Integrator Team</Owners>
+    <PackageProjectUrl>https://www.zoho.com/officeintegrator</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/iampraba/zoi-csharp-sdk</RepositoryUrl>
+    <PackageReleaseNotes>1. C# SDK Release.</PackageReleaseNotes>
+    <PackageTags>ZOHOSDK,zohocsharp,sdk,zoho,OfficeIntegrator,Writer,Sheet,Show,Document,Presentation,Spreadsheet</PackageTags>
+    <Title>Zoho Office Integrator C# SDK</Title>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>C# SDK to integrate zoho office suite editors in to web applications.</Description>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType></DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Newtonsoft.Json" />
+    <None Remove="MySql.Data" />
+  </ItemGroup>
+  <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="MySql.Data" Version="8.0.33" />
+  </ItemGroup>
+  <ItemGroup>
+		<EmbeddedResource Include="Resources\JSONDetails.json" />
+	</ItemGroup>
+</Project>
