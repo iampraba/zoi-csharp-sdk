@@ -23,7 +23,7 @@ namespace Com.Zoho.Util
     /// </summary>
     public class FormDataConverter : Converter
     {
-        public FormDataConverter(CommonAPIHandler commonAPIHandler) : base(commonAPIHandler) {}
+        public FormDataConverter(CommonAPIHandler commonAPIHandler) : base(commonAPIHandler) { }
 
         private Dictionary<string, List<object>> uniqueValuesMap = new Dictionary<string, List<object>>();
 
@@ -60,7 +60,7 @@ namespace Com.Zoho.Util
                 }
                 catch (System.Exception ex)
                 {
-                    throw new SDKException(Constants.EXCEPTION_IS_KEY_MODIFIED , ex);
+                    throw new SDKException(Constants.EXCEPTION_IS_KEY_MODIFIED, ex);
                 }
 
                 // check required
@@ -108,37 +108,24 @@ namespace Com.Zoho.Util
 
         public override void AppendToRequest(HttpWebRequest requestBase, object requestObject)
         {
-            string boundary = "----FILEBOUNDARY----";
-
+            string boundary = String.Format("----------{0:N}", Guid.NewGuid());
             requestBase.ContentType = "multipart/form-data; boundary=" + boundary;
-
             Stream fileDataStream = new MemoryStream();
-
             var boundarybytes = Encoding.UTF8.GetBytes("\r\n--" + boundary + "\r\n");
-
             var endBoundaryBytes = Encoding.UTF8.GetBytes("\r\n--" + boundary + "--");
-
             string headerTemplate = "Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\n" + "Content-Type: application/octet-stream\r\n\r\n";
-
             if (requestObject is IDictionary)
             {
                 this.AddFileBody(requestObject, fileDataStream, boundarybytes, endBoundaryBytes, headerTemplate);
             }
-
             fileDataStream.Write(endBoundaryBytes, 0, endBoundaryBytes.Length);
-
             requestBase.ContentLength = fileDataStream.Length;
-
             using (Stream requestStream = requestBase.GetRequestStream())
             {
                 fileDataStream.Position = 0;
-
                 byte[] tempBuffer = new byte[fileDataStream.Length];
-
                 fileDataStream.Read(tempBuffer, 0, tempBuffer.Length);
-
                 fileDataStream.Close();
-
                 requestStream.Write(tempBuffer, 0, tempBuffer.Length);
             }
         }
@@ -146,54 +133,53 @@ namespace Com.Zoho.Util
         private void AddFileBody(object requestObject, Stream fileDataStream, byte[] boundarybytes, byte[] endBoundaryBytes, string headerTemplate)
         {
             Dictionary<string, object> requestObjectMap = (Dictionary<string, object>)requestObject;
-
             foreach (KeyValuePair<string, object> requestData in requestObjectMap)
             {
                 if (requestData.Value is IList)
                 {
                     IList keysDetail = (IList)requestData.Value;
-
-                    foreach (object fileObject in keysDetail)
+                    if (keysDetail.Count == 0)
                     {
-                        if (fileObject is StreamWrapper)
+                        continue;
+                    }
+                    if (keysDetail != null && keysDetail[0] is StreamWrapper)
+                    {
+                        foreach (object fileObject in keysDetail)
                         {
-                            StreamWrapper streamWrapper = (StreamWrapper)fileObject;
-
-                            fileDataStream.Write(boundarybytes, 0, boundarybytes.Length);
-
-                            var header = string.Format(headerTemplate, requestData.Key, streamWrapper.Name);
-
-                            var headerbytes = System.Text.Encoding.UTF8.GetBytes(header);
-
-                            fileDataStream.Write(headerbytes, 0, headerbytes.Length);
-
-                            var buffer = new byte[1024];
-
-                            var bytesRead = 0;
-
-                            while ((bytesRead = streamWrapper.Stream.Read(buffer, 0, buffer.Length)) != 0)
+                            if (fileObject is StreamWrapper)
                             {
-                                fileDataStream.Write(buffer, 0, bytesRead);
+                                StreamWrapper streamWrapper = (StreamWrapper)fileObject;
+                                fileDataStream.Write(boundarybytes, 0, boundarybytes.Length);
+                                var header = string.Format(headerTemplate, requestData.Key, streamWrapper.Name);
+                                var headerbytes = System.Text.Encoding.UTF8.GetBytes(header);
+                                fileDataStream.Write(headerbytes, 0, headerbytes.Length);
+                                var buffer = new byte[1024];
+                                var bytesRead = 0;
+                                while ((bytesRead = streamWrapper.Stream.Read(buffer, 0, buffer.Length)) != 0)
+                                {
+                                    fileDataStream.Write(buffer, 0, bytesRead);
+                                }
                             }
                         }
+                    }
+                    else
+                    {
+                        string headerTemplate1 = "Content-Disposition: form-data; name=\"{0}\"\r\n\r\n{1}";
+                        fileDataStream.Write(boundarybytes, 0, boundarybytes.Length);
+                        var header = string.Format(headerTemplate1, requestData.Key, keysDetail);
+                        var headerbytes = System.Text.Encoding.UTF8.GetBytes(header);
+                        fileDataStream.Write(headerbytes, 0, headerbytes.Length);
                     }
                 }
                 else if (requestData.Value is StreamWrapper)
                 {
                     StreamWrapper streamWrapper = (StreamWrapper)requestData.Value;
-
                     fileDataStream.Write(boundarybytes, 0, boundarybytes.Length);
-
                     var header = string.Format(headerTemplate, requestData.Key, streamWrapper.Name);
-
                     var headerbytes = System.Text.Encoding.UTF8.GetBytes(header);
-
                     fileDataStream.Write(headerbytes, 0, headerbytes.Length);
-
                     var buffer = new byte[1024];
-
                     var bytesRead = 0;
-
                     while ((bytesRead = streamWrapper.Stream.Read(buffer, 0, buffer.Length)) != 0)
                     {
                         fileDataStream.Write(buffer, 0, bytesRead);
@@ -201,35 +187,21 @@ namespace Com.Zoho.Util
                 }
                 else
                 {
+                    string headerTemplate1 = "Content-Disposition: form-data; name=\"{0}\"\r\n\r\n{1}";
                     if (requestData.Value is IDictionary)
                     {
                         JObject json = new JObject(JsonConvert.SerializeObject(requestData.Value));
-                        
                         fileDataStream.Write(boundarybytes, 0, boundarybytes.Length);
-
-                        var header = string.Format(headerTemplate, requestData.Key, requestData.Key);
-
+                        var header = string.Format(headerTemplate, requestData.Key, json);
                         var headerbytes = System.Text.Encoding.UTF8.GetBytes(header);
-
                         fileDataStream.Write(headerbytes, 0, headerbytes.Length);
-
-                        char[] data = JsonConvert.DeserializeObject<char[]>(json.ToString());
-
-                        fileDataStream.Write(Encoding.UTF8.GetBytes(data), 0, Encoding.UTF8.GetByteCount(data));
                     }
                     else
                     {
                         fileDataStream.Write(boundarybytes, 0, boundarybytes.Length);
-
-                        var header = string.Format(headerTemplate, requestData.Key, requestData.Key);
-
+                        var header = string.Format(headerTemplate1, requestData.Key, requestData.Value);
                         var headerbytes = System.Text.Encoding.UTF8.GetBytes(header);
-
                         fileDataStream.Write(headerbytes, 0, headerbytes.Length);
-
-                        char[] data = JsonConvert.DeserializeObject<char[]>(requestData.Value.ToString());
-
-                        fileDataStream.Write(Encoding.UTF8.GetBytes(data), 0, Encoding.UTF8.GetByteCount(data));
                     }
                 }
             }
@@ -241,47 +213,52 @@ namespace Com.Zoho.Util
 
             IDictionary requestObject = (IDictionary)fieldValue;
 
-            if (memberDetail == null)
+            if (requestObject.Count > 0)
             {
-                foreach (KeyValuePair<object, object> requestObjectDetails in requestObject)
+                if (memberDetail == null || (memberDetail != null && !memberDetail.ContainsKey(Constants.KEYS)))
                 {
-                    object data = RedirectorForObjectToJSON(requestObjectDetails.Value);
-
-                    jsonObject.Add((string)requestObjectDetails.Key, data != null ? JToken.FromObject(data) : JValue.CreateNull());
-                }
-            }
-            else
-            {
-                JArray keysDetail = (JArray)memberDetail.GetValue(Constants.KEYS);
-
-                for (int keyIndex = 0; keyIndex < keysDetail.Count; keyIndex++)
-                {
-                    JObject keyDetail = (JObject)keysDetail[keyIndex];
-
-                    string keyName = (string)keyDetail.GetValue(Constants.NAME);
-
-                    object keyValue = null;
-
-                    if (requestObject.Contains(keyName) && requestObject[keyName] != null)
+                    foreach (var key in requestObject.Keys)
                     {
-                        if (keyDetail.ContainsKey(Constants.STRUCTURE_NAME))
+                        object data = RedirectorForObjectToJSON(requestObject[key]);
+
+                        jsonObject.Add((string)key, data != null ? JToken.FromObject(data) : JValue.CreateNull());
+                    }
+                }
+                else
+                {
+                    if (memberDetail.ContainsKey(Constants.KEYS))
+                    {
+                        JArray keysDetail = (JArray)memberDetail.GetValue(Constants.KEYS);
+
+                        for (int keyIndex = 0; keyIndex < keysDetail.Count; keyIndex++)
                         {
-                            keyValue = FormRequest(requestObject[keyName], (string)keyDetail.GetValue(Constants.STRUCTURE_NAME), 1, memberDetail);
+                            JObject keyDetail = (JObject)keysDetail[keyIndex];
 
-                            jsonObject.Add(keyName, keyValue != null? JToken.FromObject(keyValue) : JValue.CreateNull());
-                        }
-                        else
-                        {
-                            keyValue = requestObject[keyName];
+                            string keyName = (string)keyDetail.GetValue(Constants.NAME);
 
-                            object data = RedirectorForObjectToJSON(keyValue);
+                            object keyValue = null;
 
-                            jsonObject.Add(keyName, data != null ? JToken.FromObject(data) : JValue.CreateNull());
+                            if (requestObject.Contains(keyName) && requestObject[keyName] != null)
+                            {
+                                if (keyDetail.ContainsKey(Constants.STRUCTURE_NAME))
+                                {
+                                    keyValue = FormRequest(requestObject[keyName], (string)keyDetail.GetValue(Constants.STRUCTURE_NAME), 1, memberDetail);
+
+                                    jsonObject.Add(keyName, keyValue != null ? JToken.FromObject(keyValue) : JValue.CreateNull());
+                                }
+                                else
+                                {
+                                    keyValue = requestObject[keyName];
+
+                                    object data = RedirectorForObjectToJSON(keyValue);
+
+                                    jsonObject.Add(keyName, data != null ? JToken.FromObject(data) : JValue.CreateNull());
+                                }
+                            }
                         }
                     }
                 }
             }
-
             return jsonObject;
         }
 

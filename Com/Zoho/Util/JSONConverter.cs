@@ -70,7 +70,7 @@ namespace Com.Zoho.Util
                 }
             }
 
-            return IsNotRecordRequest(requestInstance, classDetail, instanceNumber, memberDetail);    
+            return IsNotRecordRequest(requestInstance, classDetail, instanceNumber, memberDetail);
         }
 
         private JObject IsNotRecordRequest(object requestInstance, JObject classDetail, int? instanceNumber, JObject classMemberDetail)
@@ -278,7 +278,7 @@ namespace Com.Zoho.Util
 
                     error.Add(Constants.KEYS, string.Join(",", primaryKeys.Keys));
 
-                    if(instanceNumber != null)
+                    if (instanceNumber != null)
                     {
                         error.Add(Constants.INSTANCE_NUMBER, instanceNumber);
                     }
@@ -362,9 +362,20 @@ namespace Com.Zoho.Util
 
                             if (requestObject.Contains(keyName) && requestObject[keyName] != null)
                             {
-                                keyValue = SetData(keyDetail, requestObject[keyName]);
+                                if (keyDetail.ContainsKey(Constants.STRUCTURE_NAME))
+                                {
+                                    keyValue = FormRequest(requestObject[keyName], (string)keyDetail.GetValue(Constants.STRUCTURE_NAME), 1, memberDetail);
 
-                                jsonObject.Add(keyName, keyValue != null ? JToken.FromObject(keyValue) : JValue.CreateNull());
+                                    jsonObject.Add(keyName, keyValue != null ? JToken.FromObject(keyValue) : JValue.CreateNull());
+                                }
+                                else
+                                {
+                                    keyValue = requestObject[keyName];
+
+                                    object data = RedirectorForObjectToJSON(keyValue);
+
+                                    jsonObject.Add(keyName, data != null ? JToken.FromObject(data) : JValue.CreateNull());
+                                }
                             }
                         }
                     }
@@ -552,7 +563,7 @@ namespace Com.Zoho.Util
                 }
                 else if (type.Equals(Constants.CHOICE_NAMESPACE) || (memberDetail.ContainsKey(Constants.STRUCTURE_NAME) && ((string)memberDetail[Constants.STRUCTURE_NAME]).Equals(Constants.CHOICE_NAMESPACE)))
                 {
-                    if(field != null && field.FieldType.FullName.Contains(Constants.CSHARP_NULL_TYPE_NAME))
+                    if (field != null && field.FieldType.FullName.Contains(Constants.CSHARP_NULL_TYPE_NAME))
                     {
                         Type t = Type.GetType(CSharpName(field.FieldType));
 
@@ -611,7 +622,7 @@ namespace Com.Zoho.Util
 
             if (!type.IsGenericType) return name;
 
-            foreach(Type genericArgument in type.GenericTypeArguments)
+            foreach (Type genericArgument in type.GenericTypeArguments)
             {
                 var sb1 = new StringBuilder();
 
@@ -741,7 +752,7 @@ namespace Com.Zoho.Util
 
                         JTokenType tokenType = keyData.Type;
 
-                        if(memberDetail[Constants.TYPE].Contains("Choice"))
+                        if (memberDetail[Constants.TYPE].Contains("Choice"))
                         {
                             type1 = Constants.CHOICE.Replace(Constants._TYPE, GetType(tokenType));
                         }
@@ -786,7 +797,7 @@ namespace Com.Zoho.Util
                     }
                     else
                     {
-                        if(!memberDetail.ContainsKey(Constants.STRUCTURE_NAME))
+                        if (!memberDetail.ContainsKey(Constants.STRUCTURE_NAME))
                         {
                             Type dataTypeConverter = Type.GetType(Constants.DATATYPECONVERTER.Replace(Constants._TYPE, type1));
 
