@@ -8,8 +8,8 @@ namespace Com.Zoho.Officeintegrator.V1
 	{
 		private string saveFormat;
 		private string saveUrl;
-		private string savetype;
 		private Dictionary<string, object> saveUrlParams;
+		private Dictionary<string, object> saveUrlHeaders;
 		private Dictionary<string, int?> keyModified=new Dictionary<string, int?>();
 
 		public string SaveFormat
@@ -52,26 +52,6 @@ namespace Com.Zoho.Officeintegrator.V1
 			}
 		}
 
-		public string Savetype
-		{
-			/// <summary>The method to get the savetype</summary>
-			/// <returns>string representing the savetype</returns>
-			get
-			{
-				return  this.savetype;
-
-			}
-			/// <summary>The method to set the value to savetype</summary>
-			/// <param name="savetype">string</param>
-			set
-			{
-				 this.savetype=value;
-
-				 this.keyModified["savetype"] = 1;
-
-			}
-		}
-
 		public Dictionary<string, object> SaveUrlParams
 		{
 			/// <summary>The method to get the saveUrlParams</summary>
@@ -88,6 +68,26 @@ namespace Com.Zoho.Officeintegrator.V1
 				 this.saveUrlParams=value;
 
 				 this.keyModified["save_url_params"] = 1;
+
+			}
+		}
+
+		public Dictionary<string, object> SaveUrlHeaders
+		{
+			/// <summary>The method to get the saveUrlHeaders</summary>
+			/// <returns>Dictionary representing the saveUrlHeaders<String,Object></returns>
+			get
+			{
+				return  this.saveUrlHeaders;
+
+			}
+			/// <summary>The method to set the value to saveUrlHeaders</summary>
+			/// <param name="saveUrlHeaders">Dictionary<string,object></param>
+			set
+			{
+				 this.saveUrlHeaders=value;
+
+				 this.keyModified["save_url_headers"] = 1;
 
 			}
 		}

@@ -8,7 +8,7 @@ namespace Com.Zoho.Officeintegrator.V1
 	{
 		private string url;
 		private StreamWrapper document;
-		private ShowCallbackSettings callbackSettings;
+		private CallbackSettings callbackSettings;
 		private ZohoShowEditorSettings editorSettings;
 		private Dictionary<string, object> permissions;
 		private DocumentInfo documentInfo;
@@ -55,17 +55,17 @@ namespace Com.Zoho.Officeintegrator.V1
 			}
 		}
 
-		public ShowCallbackSettings CallbackSettings
+		public CallbackSettings CallbackSettings
 		{
 			/// <summary>The method to get the callbackSettings</summary>
-			/// <returns>Instance of ShowCallbackSettings</returns>
+			/// <returns>Instance of CallbackSettings</returns>
 			get
 			{
 				return  this.callbackSettings;
 
 			}
 			/// <summary>The method to set the value to callbackSettings</summary>
-			/// <param name="callbackSettings">Instance of ShowCallbackSettings</param>
+			/// <param name="callbackSettings">Instance of CallbackSettings</param>
 			set
 			{
 				 this.callbackSettings=value;
