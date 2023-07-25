@@ -6,7 +6,7 @@
     <Authors>Zoho Office Integrator Team</Authors>
     <NeutralLanguage>en-US</NeutralLanguage>
 	<PackageId>zoi-csharp-sdk</PackageId>
-	<PackageVersion>1.0.3</PackageVersion>
+	<PackageVersion>1.0.4</PackageVersion>
     <Owners>Zoho Office Integrator Team</Owners>
     <PackageProjectUrl>https://www.zoho.com/officeintegrator</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iampraba/zoi-csharp-sdk</RepositoryUrl>

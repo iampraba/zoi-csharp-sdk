@@ -12,6 +12,7 @@ namespace Com.Zoho.Officeintegrator.V1
 		private int? retries;
 		private int? timeout;
 		private Dictionary<string, object> saveUrlParams;
+		private Dictionary<string, object> saveUrlHeaders;
 		private Dictionary<string, int?> keyModified=new Dictionary<string, int?>();
 
 		public string SaveFormat
@@ -130,6 +131,26 @@ namespace Com.Zoho.Officeintegrator.V1
 				 this.saveUrlParams=value;
 
 				 this.keyModified["save_url_params"] = 1;
+
+			}
+		}
+
+		public Dictionary<string, object> SaveUrlHeaders
+		{
+			/// <summary>The method to get the saveUrlHeaders</summary>
+			/// <returns>Dictionary representing the saveUrlHeaders<String,Object></returns>
+			get
+			{
+				return  this.saveUrlHeaders;
+
+			}
+			/// <summary>The method to set the value to saveUrlHeaders</summary>
+			/// <param name="saveUrlHeaders">Dictionary<string,object></param>
+			set
+			{
+				 this.saveUrlHeaders=value;
+
+				 this.keyModified["save_url_headers"] = 1;
 
 			}
 		}
